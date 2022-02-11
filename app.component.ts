@@ -332,165 +332,145 @@ export class AppComponent {
   }
 
   contextMenuClick(args): void {
+    if (args.item.text == 'Cut') {
+      this.flag = true;
+      // for (
+      //   var i = 0;
+      //   i < this.treegrid.getSelectedRowCellIndexes()[0].cellIndexes.length;
+      //   i++
+      // ) {
+      //   this.fieldData.push(
+      //     this.treegrid.getColumnByIndex(
+      //       this.treegrid.getSelectedRowCellIndexes()[0].cellIndexes[i]
+      //     ).field
+      //   );
+      // }
+      // this.cutIndex = this.treegrid.getSelectedRowCellIndexes();
+      // this.treegrid.copyHierarchyMode = 'None';
+      // this.treegrid.copy();
+      this.cutRow = this.treegrid.getRowByIndex(this.rowIndex);
+      this.cutRowBool = true;
+      this.treegrid.copyHierarchyMode = 'None';
+      this.treegrid.copy();
+      this.cutRow.setAttribute('style', 'background:#FFC0CB;');
+    }
     if (args.item.id == 'rsibling') {
      
-        var copyContent = this.treegrid.clipboardModule.copyContent;
+      var copyContent = this.treegrid.clipboardModule.copyContent;
 
-        var stringArray = copyContent.split('\t');
-        let newRecord: Treerow = new Treerow(
-          stringArray[0],
-          stringArray[1],
-          stringArray[2],
-          stringArray[3],
-          stringArray[4],
-          stringArray[5],
-          stringArray[6],
-          this.selectedRow.data.ParentItem
-        );
-        newRecord.children = [];
-        newRecord.isParent = true;
-        newRecord.id = uuidv4();
-        const body = {
-          TaskID: newRecord.TaskID,
-          TaskName: newRecord.TaskName,
-          StartDate: newRecord.StartDate,
-          EndDate: newRecord.EndDate,
-          Duration: newRecord.Duration,
-          Progress: newRecord.Progress,
-          Priority: newRecord.Priority,
-          isParent: newRecord.isParent,
-          ParentItem: newRecord.ParentItem,
-        };
+       
+      var stringArray = copyContent.split('\t');
+      let newRecord: Treerow = new Treerow(
+        stringArray[0],
+        stringArray[1],
+        stringArray[2],
+        stringArray[3],
+        stringArray[4],
+        stringArray[5],
+        stringArray[6],
+        this.selectedRow.data.ParentItem
+      );
+      newRecord.children = [];
+      newRecord.isParent = true;
+      newRecord.id = uuidv4();
+      const body = {
+        TaskID: newRecord.TaskID,
+        TaskName: newRecord.TaskName,
+        StartDate: newRecord.StartDate,
+        EndDate: newRecord.EndDate,
+        Duration: newRecord.Duration,
+        Progress: newRecord.Progress,
+        Priority: newRecord.Priority,
+        isParent: newRecord.isParent,
+        ParentItem: newRecord.ParentItem,
+      };
+      this.http
+        .delete<any>(
+          `https://vom-app.herokuapp.com/tasks/${newRecord.TaskID}`
+        )
+        .subscribe((data) => {
+          console.log('post:------------------', data);
+          this.treegrid.refresh();
+          this.dataManager
+            .executeQuery(new Query())
+            .then(
+              (e: ReturnOption) => (this.data = e.result.data as object[])
+            )
+            .catch((e) => true);
+        });
+      this.http
+        .post<any>('https://vom-app.herokuapp.com/tasks', body)
+        .subscribe((data) => {
+          this.dataManager
+            .executeQuery(new Query())
+            .then(
+              (e: ReturnOption) => (this.data = e.result.data as object[])
+            )
+            .catch((e) => true);
+        });
 
-        this.http
-          .post<any>('https://vom-app.herokuapp.com/tasks', body)
-          .subscribe((data) => {
-            console.log('post:------------------', data);
-            this.dataManager
-              .executeQuery(new Query())
-              .then(
-                (e: ReturnOption) => (this.data = e.result.data as object[])
-              )
-              .catch((e) => true);
-          });
-        this.dataManager
-          .executeQuery(new Query())
-          .then((e: ReturnOption) => (this.data = e.result.data as object[]))
-          .catch((e) => true);
+      // this.treegrid.addRecord(newRecord, 0, 'Above');
 
-        this.copiedRow.setAttribute('style', 'background:white;');
+      this.cutRowBool = false;
+      this.copiedRow.setAttribute('style', 'background:white;');
     
     }
 
     if (args.item.id == 'rchild') {
-      if (this.cutRowBool == true) {
-        var copyContent = this.treegrid.clipboardModule.copyContent;
+      var copyContent = this.treegrid.clipboardModule.copyContent;
 
-        var stringArray = copyContent.split('\t');
-        let newRecord: Treerow = new Treerow(
-          stringArray[0],
-          stringArray[1],
-          stringArray[2],
-          stringArray[3],
-          stringArray[4],
-          stringArray[5],
-          stringArray[6],
-          this.selectedRow.data.TaskID
-        );
-        newRecord.children = [];
-        newRecord.isParent = true;
-        newRecord.id = uuidv4();
-        const body = {
-          TaskID: newRecord.TaskID,
-          TaskName: newRecord.TaskName,
-          StartDate: newRecord.StartDate,
-          EndDate: newRecord.EndDate,
-          Duration: newRecord.Duration,
-          Progress: newRecord.Progress,
-          Priority: newRecord.Priority,
-          isParent: newRecord.isParent,
-          ParentItem: newRecord.ParentItem,
-        };
-        this.http
-          .delete<any>(
-            `https://vom-app.herokuapp.com/tasks/${newRecord.TaskID}`
-          )
-          .subscribe((data) => {
-            console.log('post:------------------', data);
-            this.treegrid.refresh();
-            this.http
-              .post<any>('https://vom-app.herokuapp.com/tasks', body)
-              .subscribe((data) => {
-                this.dataManager
-                  .executeQuery(new Query())
-                  .then(
-                    (e: ReturnOption) => (this.data = e.result.data as object[])
-                  )
-                  .catch((e) => true);
-              });
-          });
+      // this.treegrid.paste(copyContent, rowIndex);
 
-        this.cutRowBool = false;
-        this.copiedRow.setAttribute('style', 'background:white;');
-      } else {
-        var copyContent = this.treegrid.clipboardModule.copyContent;
-        var stringArray = copyContent.split('\t');
-        let newRecord: Treerow = new Treerow(
-          stringArray[0],
-          stringArray[1],
-          stringArray[2],
-          stringArray[3],
-          stringArray[4],
-          stringArray[5],
-          stringArray[6],
-          this.selectedRow.data.TaskID
-        );
-        newRecord.children = [];
-        newRecord.isParent = false;
-        newRecord.id = uuidv4();
-        const body = {
-          TaskID: newRecord.TaskID,
-          TaskName: newRecord.TaskName,
-          StartDate: newRecord.StartDate,
-          EndDate: newRecord.EndDate,
-          Duration: newRecord.Duration,
-          Progress: newRecord.Progress,
-          Priority: newRecord.Priority,
-          isParent: newRecord.isParent,
-          ParentItem: newRecord.ParentItem,
-        };
-
-        this.http
-          .post<any>('https://vom-app.herokuapp.com/tasks', body)
-          .subscribe((data) => {
-            console.log('post:------------------', data);
-            this.dataManager
-              .executeQuery(new Query())
-              .then(
-                (e: ReturnOption) => (this.data = e.result.data as object[])
-              )
-              .catch((e) => true);
-          });
-
-        this.copiedRow.setAttribute('style', 'background:white;');
-      }
-    } else if (args.item.id === 'rcopy') {
-      this.MultiSelect = true;
-
-      this.editSettings = {
-        allowEditing: true,
-        allowAdding: true,
-        allowDeleting: true,
-
-        newRowPosition: 'Child',
-        mode: 'Batch',
+      var stringArray = copyContent.split('\t');
+      let newRecord: Treerow = new Treerow(
+        stringArray[0],
+        stringArray[1],
+        stringArray[2],
+        stringArray[3],
+        stringArray[4],
+        stringArray[5],
+        stringArray[6],
+        this.selectedRow.data.TaskID
+      );
+      newRecord.children = [];
+      newRecord.isParent = true;
+      newRecord.id = uuidv4();
+      const body = {
+        TaskID: newRecord.TaskID,
+        TaskName: newRecord.TaskName,
+        StartDate: newRecord.StartDate,
+        EndDate: newRecord.EndDate,
+        Duration: newRecord.Duration,
+        Progress: newRecord.Progress,
+        Priority: newRecord.Priority,
+        isParent: newRecord.isParent,
+        ParentItem: newRecord.ParentItem,
       };
-      this.copiedRow = this.treegrid.getRowByIndex(this.rowIndex);
+      this.http
+        .delete<any>(
+          `https://vom-app.herokuapp.com/tasks/${newRecord.TaskID}`
+        )
+        .subscribe((data) => {
+          console.log('post:------------------', data);
+          this.treegrid.refresh();
+          this.http
+            .post<any>('https://vom-app.herokuapp.com/tasks', body)
+            .subscribe((data) => {
+              this.dataManager
+                .executeQuery(new Query())
+                .then(
+                  (e: ReturnOption) => (this.data = e.result.data as object[])
+                )
+                .catch((e) => true);
+            });
+        });
 
-      this.treegrid.copyHierarchyMode = 'None';
-      this.treegrid.copy();
-      this.copiedRow.setAttribute('style', 'background:#FFC0CB;');
-    }
+      // this.treegrid.addRecord(newRecord, 0, 'Above');
+
+      this.cutRowBool = false;
+      this.copiedRow.setAttribute('style', 'background:white;');
+    
+    } 
   }
 
   // Initialize the Dialog component's target element.
