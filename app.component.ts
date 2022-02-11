@@ -216,7 +216,10 @@ export class AppComponent {
     this.fields = { text: 'type', value: 'id' };
     this.dateformat = { type: 'dateTime', format: 'dd/MM/yyyy' };
     this.contextMenuItems = [
-      { text: 'Copy', target: '.e-content', id: 'rcopy' },
+      {   id: 'cut',
+      text: 'Cut',
+      target: '.e-content',
+      iconCss: 'e-cm-icons e-cut' },
 
       { text: 'Paste Sibling', target: '.e-content', id: 'rsibling' },
       { text: 'Paste Child', target: '.e-content', id: 'rchild' },
@@ -317,8 +320,8 @@ export class AppComponent {
     }
     if (elem.closest('.e-row')) {
       document
-        .querySelectorAll('li#rcopy')[0]
-        .setAttribute('style', 'display: block;');
+      .querySelectorAll('li#cut')[0]
+      .setAttribute('style', 'display: block;');
 
       document
         .querySelectorAll('li#rsibling')[0]
