@@ -337,20 +337,7 @@ export class AppComponent {
   contextMenuClick(args): void {
     if (args.item.text == 'Cut') {
       this.flag = true;
-      // for (
-      //   var i = 0;
-      //   i < this.treegrid.getSelectedRowCellIndexes()[0].cellIndexes.length;
-      //   i++
-      // ) {
-      //   this.fieldData.push(
-      //     this.treegrid.getColumnByIndex(
-      //       this.treegrid.getSelectedRowCellIndexes()[0].cellIndexes[i]
-      //     ).field
-      //   );
-      // }
-      // this.cutIndex = this.treegrid.getSelectedRowCellIndexes();
-      // this.treegrid.copyHierarchyMode = 'None';
-      // this.treegrid.copy();
+     
       this.cutRow = this.treegrid.getRowByIndex(this.rowIndex);
       this.cutRowBool = true;
       this.treegrid.copyHierarchyMode = 'None';
