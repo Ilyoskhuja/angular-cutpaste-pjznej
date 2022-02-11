@@ -1,0 +1,60 @@
+.e-gridlist .e-tbar-btn.e-btn,
+.e-gridlist .e-btn {
+  box-shadow: none;
+  text-transform: none;
+}
+
+.e-ghidden {
+  opacity: 0.35;
+}
+
+.e-mastertext {
+  font-size: 15px;
+  font-family: Roboto;
+  opacity: 0.87;
+  padding: 1em;
+}
+#dialog-container {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+
+#container {
+  visibility: hidden;
+}
+
+#loader {
+  color: #008cff;
+  height: 40px;
+  left: 45%;
+  position: absolute;
+  top: 45%;
+  width: 30%;
+}
+
+
+
+.e-treegrid .e-headercell.customcssa {
+  background-color: blue;
+  color: yellow;
+  font-size: '20px';
+}
+.e-treegrid .e-headercell.customcssb {
+  background-color: blue;
+  color: white;
+  font-size: '20px';
+}
+.e-treegrid .e-headercell.customcssc {
+  background-color: green;
+  color: white;
+  font-size: '15px';
+}
+
+.e-treegrid .e-headercell.customcssd {
+  background-color: green !important;
+  color: yellow !important;
+  font-size: '15px'!important;
+}
+
